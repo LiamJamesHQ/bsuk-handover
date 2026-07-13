@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Handover Sign-Off — Barrel Sauna UK</title>
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -31,6 +31,12 @@
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+/* ---------- KILL SIDEWAYS SCROLL ---------- */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   padding: 24px 16px 80px 16px;
@@ -38,38 +44,49 @@ body {
   font-family: var(--face);
   color: var(--body);
   font-weight: 400;
+  width: 100%;
 }
 
-.wrap { max-width: 720px; margin: 0 auto; }
+.wrap {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
 
+/* ---------- CARD ---------- */
 .card {
   background: #fff;
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
   overflow: hidden;
   margin: 0 0 20px 0;
+  width: 100%;
 }
 .card__head { background: var(--forest); padding: 20px var(--gutter); }
 .card__head h2 {
   font-size: 11px; font-weight: 400; color: var(--sage-pale);
   letter-spacing: 2.5px; text-transform: uppercase; margin: 0;
+  word-break: break-word;
 }
 .card__body { padding: var(--gutter); }
 
+/* ---------- MASTHEAD ---------- */
 .masthead {
   background: var(--forest);
   border-radius: var(--radius);
   padding: 32px var(--gutter);
   margin: 0 0 20px 0;
   text-align: center;
+  width: 100%;
 }
-.masthead img { width: 142px; height: auto; display: block; margin: 0 auto 20px auto; }
+.masthead img { max-width: 142px; width: 100%; height: auto; display: block; margin: 0 auto 20px auto; }
 .masthead .kicker {
   font-size: 11px; font-weight: 400; color: var(--sage-pale);
   letter-spacing: 2.5px; text-transform: uppercase; margin: 0 0 10px 0;
 }
 .masthead h1 { font-size: 24px; font-weight: 400; color: #fff; margin: 0; line-height: 1.3; }
 
+/* ---------- TYPE ---------- */
 .label {
   font-size: 11px; font-weight: 400; color: var(--sage-muted);
   letter-spacing: 2px; text-transform: uppercase; margin: 0 0 8px 0;
@@ -79,13 +96,15 @@ body {
 .sub   { font-size: 14px; font-weight: 400; color: var(--sub); line-height: 1.75; margin: 0; }
 .fine  { font-size: 12px; font-weight: 400; color: var(--fine); line-height: 1.7; margin: 0; }
 
-.field { margin: 0 0 20px 0; }
+/* ---------- FIELDS ---------- */
+.field { margin: 0 0 20px 0; width: 100%; }
 .field:last-child { margin-bottom: 0; }
 
 .input, select.input, textarea.input {
   width: 100%;
+  max-width: 100%;
   font-family: var(--face);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--body);
   background: #fff;
@@ -105,9 +124,14 @@ select.input {
   padding-right: 38px;
 }
 
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
 
+/* ---------- CHECK ROWS ---------- */
 .checkrow {
   display: flex;
   align-items: center;
@@ -115,9 +139,20 @@ select.input {
   gap: 14px;
   padding: 14px 0;
   border-bottom: 1px solid rgba(43,83,54,0.08);
+  width: 100%;
 }
 .checkrow:last-child { border-bottom: 0; padding-bottom: 0; }
-.checkrow__text { font-size: 14px; font-weight: 400; color: var(--body); line-height: 1.6; flex: 1; }
+.checkrow__text {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--body);
+  line-height: 1.6;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  margin: 0;
+}
 
 .toggle { display: flex; gap: 6px; flex-shrink: 0; }
 .toggle button {
@@ -132,6 +167,7 @@ select.input {
   background: #fff;
   color: var(--sub);
   cursor: pointer;
+  white-space: nowrap;
 }
 .toggle button.on-pass { background: var(--sage); border-color: var(--sage); color: #fff; }
 .toggle button.on-fail { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
@@ -139,8 +175,15 @@ select.input {
 
 .empty { font-size: 14px; font-weight: 400; color: var(--fine); line-height: 1.75; margin: 0; }
 
-.snag { display: flex; gap: 10px; margin: 0 0 12px 0; align-items: flex-start; }
-.snag .input { flex: 1; }
+/* ---------- SNAGS ---------- */
+.snag {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 12px 0;
+  align-items: flex-start;
+  width: 100%;
+}
+.snag .input { flex: 1 1 auto; min-width: 0; }
 .snag__kill {
   font-family: var(--face);
   font-size: 18px;
@@ -149,18 +192,20 @@ select.input {
   background: transparent;
   border: 1px solid var(--card-border);
   border-radius: 6px;
-  width: 46px;
-  height: 46px;
-  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
   cursor: pointer;
   line-height: 1;
 }
 .snag__kill:hover { color: var(--terracotta); border-color: var(--terracotta); }
 
-.sigbox { margin: 0 0 24px 0; }
+/* ---------- SIGNATURE ---------- */
+.sigbox { margin: 0 0 24px 0; width: 100%; }
 .sigbox:last-child { margin-bottom: 0; }
 .sigpad {
   width: 100%;
+  max-width: 100%;
   height: 170px;
   background: var(--panel);
   border: 1px solid var(--card-border);
@@ -175,16 +220,21 @@ select.input {
   align-items: center;
   gap: 12px;
   margin: 8px 0 0 0;
+  flex-wrap: wrap;
 }
+.sigbar .fine { flex: 1 1 auto; min-width: 0; }
 
+/* ---------- PANEL ---------- */
 .panel {
   background: var(--panel);
   border-left: 3px solid var(--terracotta);
   border-radius: 6px;
   padding: 22px 26px;
+  width: 100%;
 }
 .panel .label { margin-bottom: 6px; }
 
+/* ---------- BUTTONS ---------- */
 .btn {
   display: inline-block;
   background: var(--terracotta);
@@ -199,6 +249,7 @@ select.input {
   text-decoration: none;
   cursor: pointer;
   text-align: center;
+  max-width: 100%;
 }
 .btn:hover { background: #b07d38; }
 .btn:disabled { background: var(--dead-border); cursor: not-allowed; }
@@ -211,20 +262,27 @@ select.input {
 .btn--ghost:hover { background: var(--panel); }
 .btn--sm { padding: 9px 16px; font-size: 12px; }
 
-.actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-@media (max-width: 560px) { .actions { grid-template-columns: 1fr; } }
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
 
+/* ---------- STATUS ---------- */
 .status { margin: 16px 0 0 0; text-align: center; min-height: 22px; }
-.status p { margin: 0; font-size: 14px; font-weight: 400; line-height: 1.6; }
+.status p { margin: 0; font-size: 14px; font-weight: 400; line-height: 1.6; overflow-wrap: break-word; }
 .status--ok p   { color: var(--sage); }
 .status--bad p  { color: var(--terracotta); }
 .status--wait p { color: var(--sub); }
 
+/* ---------- FOOTER ---------- */
 .foot {
   background: var(--forest);
   border-radius: var(--radius);
   padding: 16px var(--gutter);
   text-align: center;
+  width: 100%;
 }
 .foot p {
   margin: 0;
@@ -232,6 +290,49 @@ select.input {
   font-weight: 400;
   color: rgba(255,255,255,0.7);
   letter-spacing: 0.5px;
+  overflow-wrap: break-word;
+}
+
+/* =========================================================
+   MOBILE — below 600px
+   ========================================================= */
+@media (max-width: 600px) {
+  :root { --gutter: 20px; }
+
+  body { padding: 16px 12px 60px 12px; }
+
+  .masthead { padding: 26px 20px; }
+  .masthead h1 { font-size: 21px; }
+
+  .grid { grid-template-columns: 1fr; gap: 18px; }
+
+  /* Stack the check text above the toggle — no sideways squeeze */
+  .checkrow {
+    display: block;
+    padding: 16px 0;
+  }
+  .checkrow__text { margin: 0 0 12px 0; }
+  .toggle { width: 100%; }
+  .toggle button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 4px;
+    font-size: 13px;
+  }
+
+  .actions { grid-template-columns: 1fr; }
+  .btn { width: 100%; display: block; padding: 16px 20px; }
+
+  .panel { padding: 20px 20px; }
+  .sigpad { height: 150px; }
+
+  .sigbar { flex-wrap: nowrap; }
+  .sigbar .btn--sm { flex: 0 0 auto; }
+}
+
+@media (max-width: 380px) {
+  .toggle button { padding: 12px 2px; font-size: 12px; letter-spacing: 0; }
+  .masthead h1 { font-size: 19px; }
 }
 </style>
 </head>
@@ -588,7 +689,7 @@ function ukDate(iso) {
 }
 
 /* =========================================================
-   LOGO — preload as base64 for the PDF
+   LOGO
    ========================================================= */
 function loadLogo() {
   const img = new Image();
@@ -708,10 +809,11 @@ function initPad(id) {
 
   function size() {
     const r = canvas.getBoundingClientRect();
+    if (!r.width) return;
     const dpr = window.devicePixelRatio || 1;
     const img = dirty ? canvas.toDataURL() : null;
-    canvas.width = r.width * dpr;
-    canvas.height = r.height * dpr;
+    canvas.width = Math.round(r.width * dpr);
+    canvas.height = Math.round(r.height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
@@ -740,7 +842,11 @@ function initPad(id) {
   canvas.addEventListener('touchstart', start, { passive: false });
   canvas.addEventListener('touchmove', move, { passive: false });
   canvas.addEventListener('touchend', stop);
-  window.addEventListener('resize', size);
+  canvas.addEventListener('touchcancel', stop);
+
+  let t;
+  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(size, 150); });
+  window.addEventListener('orientationchange', () => { clearTimeout(t); t = setTimeout(size, 300); });
   size();
 
   return {
@@ -756,8 +862,7 @@ function initPad(id) {
       octx.fillRect(0, 0, out.width, out.height);
       octx.drawImage(canvas, 0, 0);
       return out.toDataURL('image/png');
-    },
-    ratio() { const r = canvas.getBoundingClientRect(); return r.height / r.width; }
+    }
   };
 }
 
@@ -784,7 +889,7 @@ function prefill() {
 }
 
 /* =========================================================
-   VALIDATE + PAYLOAD
+   VALIDATE + COLLECT
    ========================================================= */
 function validate() {
   const missing = [];
@@ -844,7 +949,6 @@ function makePDF(d) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   let y = 0;
 
-  /* ---- page furniture ---- */
   function footer() {
     doc.setFillColor(...C.forest);
     doc.rect(0, PG.h - 14, PG.w, 14, 'F');
@@ -864,7 +968,6 @@ function makePDF(d) {
     if (y + need > PG.h - 22) page();
   }
 
-  /* ---- primitives ---- */
   function sectionLabel(txt) {
     room(14);
     doc.setFont('helvetica', 'normal');
@@ -929,7 +1032,7 @@ function makePDF(d) {
     y += 3;
   }
 
-  /* ================= PAGE 1 — band ================= */
+  /* ---- band ---- */
   doc.setFillColor(...C.forest);
   doc.rect(0, 0, PG.w, 58, 'F');
 
@@ -953,7 +1056,7 @@ function makePDF(d) {
   footer();
   y = 58 + 14;
 
-  /* ================= THE JOB ================= */
+  /* ---- the job ---- */
   sectionLabel('The Job');
   rowPair('Customer', d.name, 'Order number', d.order);
   rowPair('Product', d.product, 'Handover date', ukDate(d.date));
@@ -962,7 +1065,7 @@ function makePDF(d) {
   rowFull('Install address', d.address);
   y += 3;
 
-  /* ================= OUTCOME PANEL — the one focal ================= */
+  /* ---- outcome panel: the one focal ---- */
   room(26);
   doc.setFillColor(...C.panel);
   doc.rect(PG.m, y, CW, 20, 'F');
@@ -981,12 +1084,12 @@ function makePDF(d) {
   doc.text(outcome, PG.m + 6, y + 14.5);
   y += 28;
 
-  /* ================= BUILD CHECKS ================= */
+  /* ---- build checks ---- */
   sectionLabel('Build Checks');
   Object.keys(state.checks).forEach(k => checkLine(k, state.checks[k]));
   y += 4;
 
-  /* ================= SNAGS ================= */
+  /* ---- snags ---- */
   sectionLabel('Snag List');
   if (d.snags.length) {
     d.snags.forEach((s, i) => {
@@ -1008,12 +1111,12 @@ function makePDF(d) {
   }
   y += 4;
 
-  /* ================= WALKTHROUGH ================= */
+  /* ---- walkthrough ---- */
   sectionLabel('Customer Walkthrough');
   Object.keys(state.walkthrough).forEach(k => checkLine(k, state.walkthrough[k]));
   y += 4;
 
-  /* ================= NOTES ================= */
+  /* ---- notes ---- */
   if (d.notes) {
     sectionLabel('Notes');
     const lines = doc.splitTextToSize(d.notes, CW);
@@ -1024,9 +1127,8 @@ function makePDF(d) {
     y += lines.length * 5 + 8;
   }
 
-  /* ================= SIGN-OFF ================= */
-  const sigBlock = 78;
-  if (y + sigBlock > PG.h - 22) page();
+  /* ---- sign-off ---- */
+  if (y + 78 > PG.h - 22) page();
 
   sectionLabel('Sign-Off');
 
@@ -1058,7 +1160,7 @@ function makePDF(d) {
 
     doc.setFontSize(8);
     doc.setTextColor(...C.sub);
-    doc.text(sub, x, top + sigH + 6);
+    doc.text(sub, x, top + sigH + 6, { maxWidth: half });
   }
 
   sigSlot(PG.m, 'Builder signature', d.builder || 'Barrel Sauna UK', pads['sig-builder']);
