@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handover Sign-Off — Barrel Sauna UK</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root {
+  --forest: #2B5336;
+  --forest-dark: #243d29;
+  --sage: #50795F;
+  --sage-pale: #8fae86;
+  --sage-muted: #7d9a86;
+  --terracotta: #C08B41;
+  --terracotta-bg: #fdf6ec;
+  --bone: #F1F2EC;
+  --bone-dark: #e8eae2;
+  --panel: #f7f8f3;
+  --body: #4a4a4a;
+  --sub: #999999;
+  --fine: #bbbbbb;
+  --dead-border: #d8d3cb;
+  --hairline: rgba(43,83,54,0.12);
+  --card-border: rgba(58,82,52,0.15);
+  --face: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --gutter: 32px;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  margin: 0;
+  padding: 24px 16px 80px 16px;
+  background: var(--bone-dark);
+  font-family: var(--face);
+  color: var(--body);
+  font-weight: 400;
+}
+
+.wrap { max-width: 720px; margin: 0 auto; }
+
+.card {
+  background: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 0 0 20px 0;
+}
+.card__head { background: var(--forest); padding: 20px var(--gutter); }
+.card__head h2 {
+  font-size: 11px; font-weight: 400; color: var(--sage-pale);
+  letter-spacing: 2.5px; text-transform: uppercase; margin: 0;
+}
+.card__body { padding: var(--gutter); }
+
+.masthead {
+  background: var(--forest);
+  border-radius: var(--radius);
+  padding: 32px var(--gutter);
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+.masthead img { width: 142px; height: auto; display: block; margin: 0 auto 20px auto; }
+.masthead .kicker {
+  font-size: 11px; font-weight: 400; color: var(--sage-pale);
+  letter-spacing: 2.5px; text-transform: uppercase; margin: 0 0 10px 0;
+}
+.masthead h1 { font-size: 24px; font-weight: 400; color: #fff; margin: 0; line-height: 1.3; }
+
+.label {
+  font-size: 11px; font-weight: 400; color: var(--sage-muted);
+  letter-spacing: 2px; text-transform: uppercase; margin: 0 0 8px 0;
+}
+.focal { font-size: 16px; font-weight: 400; color: var(--terracotta); line-height: 1.5; margin: 0; }
+.prose { font-size: 15px; font-weight: 400; color: var(--body); line-height: 1.8; margin: 0 0 18px 0; }
+.sub   { font-size: 14px; font-weight: 400; color: var(--sub); line-height: 1.75; margin: 0; }
+.fine  { font-size: 12px; font-weight: 400; color: var(--fine); line-height: 1.7; margin: 0; }
+
+.field { margin: 0 0 20px 0; }
+.field:last-child { margin-bottom: 0; }
+
+.input, select.input, textarea.input {
+  width: 100%;
+  font-family: var(--face);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--body);
+  background: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 13px 14px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.input:focus { outline: 0; border-color: var(--sage); }
+textarea.input { line-height: 1.7; resize: vertical; min-height: 74px; }
+
+select.input {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%2350795F' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+
+.checkrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(43,83,54,0.08);
+}
+.checkrow:last-child { border-bottom: 0; padding-bottom: 0; }
+.checkrow__text { font-size: 14px; font-weight: 400; color: var(--body); line-height: 1.6; flex: 1; }
+
+.toggle { display: flex; gap: 6px; flex-shrink: 0; }
+.toggle button {
+  font-family: var(--face);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 9px 14px;
+  min-width: 52px;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--sub);
+  cursor: pointer;
+}
+.toggle button.on-pass { background: var(--sage); border-color: var(--sage); color: #fff; }
+.toggle button.on-fail { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
+.toggle button.on-na   { background: var(--bone-dark); border-color: var(--dead-border); color: var(--sub); }
+
+.empty { font-size: 14px; font-weight: 400; color: var(--fine); line-height: 1.75; margin: 0; }
+
+.snag { display: flex; gap: 10px; margin: 0 0 12px 0; align-items: flex-start; }
+.snag .input { flex: 1; }
+.snag__kill {
+  font-family: var(--face);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--fine);
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+.snag__kill:hover { color: var(--terracotta); border-color: var(--terracotta); }
+
+.sigbox { margin: 0 0 24px 0; }
+.sigbox:last-child { margin-bottom: 0; }
+.sigpad {
+  width: 100%;
+  height: 170px;
+  background: var(--panel);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+.sigbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 0 0;
+}
+
+.panel {
+  background: var(--panel);
+  border-left: 3px solid var(--terracotta);
+  border-radius: 6px;
+  padding: 22px 26px;
+}
+.panel .label { margin-bottom: 6px; }
+
+.btn {
+  display: inline-block;
+  background: var(--terracotta);
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  padding: 15px 36px;
+  font-family: var(--face);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+}
+.btn:hover { background: #b07d38; }
+.btn:disabled { background: var(--dead-border); cursor: not-allowed; }
+.btn--ghost {
+  background: transparent;
+  color: var(--sage);
+  border: 1px solid var(--card-border);
+  font-weight: 400;
+}
+.btn--ghost:hover { background: var(--panel); }
+.btn--sm { padding: 9px 16px; font-size: 12px; }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .actions { grid-template-columns: 1fr; } }
+
+.status { margin: 16px 0 0 0; text-align: center; min-height: 22px; }
+.status p { margin: 0; font-size: 14px; font-weight: 400; line-height: 1.6; }
+.status--ok p   { color: var(--sage); }
+.status--bad p  { color: var(--terracotta); }
+.status--wait p { color: var(--sub); }
+
+.foot {
+  background: var(--forest);
+  border-radius: var(--radius);
+  padding: 16px var(--gutter);
+  text-align: center;
+}
+.foot p {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <img src="https://static.wixstatic.com/media/c71fcd_8399ae781d144665a26f8567a63d4e6f~mv2.png/v1/crop/x_0,y_51,w_1024,h_701/fill/w_284,h_194,al_c,q_85,usm_0.66_1.00_0.01/_edited.png" alt="Barrel Sauna UK">
+    <p class="kicker">Handover Sign-Off</p>
+    <h1>Build Completion Record</h1>
+  </div>
+
+  <div class="card">
+    <div class="card__head"><h2>The Job</h2></div>
+    <div class="card__body">
+      <div class="grid">
+        <div class="field">
+          <p class="label">Customer name</p>
+          <input class="input" id="f-name" type="text" placeholder="Full name">
+        </div>
+        <div class="field">
+          <p class="label">Order number</p>
+          <input class="input" id="f-order" type="text" placeholder="e.g. 1042">
+        </div>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <p class="label">Customer email</p>
+          <input class="input" id="f-email" type="email" placeholder="name@example.com">
+        </div>
+        <div class="field">
+          <p class="label">Customer phone</p>
+          <input class="input" id="f-phone" type="tel" placeholder="07…">
+        </div>
+      </div>
+      <div class="field">
+        <p class="label">Install address</p>
+        <textarea class="input" id="f-address" rows="2" placeholder="Street, town, postcode"></textarea>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <p class="label">Product</p>
+          <select class="input" id="f-product">
+            <option value="">Select a product…</option>
+          </select>
+        </div>
+        <div class="field">
+          <p class="label">Handover date</p>
+          <input class="input" id="f-date" type="date">
+        </div>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <p class="label">Builder on site</p>
+          <input class="input" id="f-builder" type="text" placeholder="Name">
+        </div>
+        <div class="field">
+          <p class="label">Serial / batch reference</p>
+          <input class="input" id="f-serial" type="text" placeholder="If applicable">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card__head"><h2>Build Checks</h2></div>
+    <div class="card__body">
+      <div id="checks">
+        <p class="empty">Select a product above to load the build checks.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card__head"><h2>Snag List</h2></div>
+    <div class="card__body">
+      <p class="prose">Anything left outstanding. Leave blank for a clean handover.</p>
+      <div id="snags"></div>
+      <button class="btn btn--ghost btn--sm" id="add-snag" type="button">Add a snag</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card__head"><h2>Customer Walkthrough</h2></div>
+    <div class="card__body">
+      <p class="prose">Confirm each item was shown to the customer in person.</p>
+      <div id="walkthrough"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card__head"><h2>Notes</h2></div>
+    <div class="card__body">
+      <div class="field">
+        <p class="label">Anything worth recording</p>
+        <textarea class="input" id="f-notes" rows="4" placeholder="Site access, customer requests, follow-up needed…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card__head"><h2>Sign-Off</h2></div>
+    <div class="card__body">
+
+      <div class="panel">
+        <p class="label">What signing means</p>
+        <p class="focal">The build is finished and handed over</p>
+      </div>
+
+      <p class="prose" style="margin-top:24px;">Both parties sign below to confirm the unit has been delivered, checked and handed over in the condition recorded on this form, with any snags listed above.</p>
+
+      <div class="sigbox">
+        <p class="label">Builder signature</p>
+        <canvas class="sigpad" id="sig-builder"></canvas>
+        <div class="sigbar">
+          <p class="fine">Signed on behalf of Barrel Sauna UK</p>
+          <button class="btn btn--ghost btn--sm" data-clear="sig-builder" type="button">Clear</button>
+        </div>
+      </div>
+
+      <div class="sigbox">
+        <p class="label">Customer signature</p>
+        <canvas class="sigpad" id="sig-customer"></canvas>
+        <div class="sigbar">
+          <p class="fine">Signed by the customer</p>
+          <button class="btn btn--ghost btn--sm" data-clear="sig-customer" type="button">Clear</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card__head"><h2>Finish</h2></div>
+    <div class="card__body">
+      <div class="actions">
+        <button class="btn" id="btn-pdf" type="button">Download PDF</button>
+        <button class="btn btn--ghost" id="btn-save" type="button">Save to GHL</button>
+        <button class="btn btn--ghost" id="btn-reset" type="button">Reset form</button>
+      </div>
+      <div class="status" id="status"><p></p></div>
+      <p class="fine" style="margin-top:20px; text-align:center;">Download the PDF, then WhatsApp it to the customer and attach it to their contact in GHL.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p>Barrel Sauna UK &nbsp;•&nbsp; Handcrafted in Wales &nbsp;•&nbsp; barrelsaunauk.co.uk</p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   CONFIG
+   ========================================================= */
+const WEBHOOK_URL = 'PASTE_GHL_INBOUND_WEBHOOK_URL_HERE';
+const LOGO_URL = 'https://static.wixstatic.com/media/c71fcd_8399ae781d144665a26f8567a63d4e6f~mv2.png/v1/crop/x_0,y_51,w_1024,h_701/fill/w_284,h_194,al_c,q_85,usm_0.66_1.00_0.01/_edited.png';
+
+/* =========================================================
+   BRAND — PDF colour tokens
+   ========================================================= */
+const C = {
+  forest:     [43, 83, 54],
+  sage:       [80, 121, 95],
+  sageMuted:  [125, 154, 134],
+  sagePale:   [143, 174, 134],
+  terracotta: [192, 139, 65],
+  body:       [74, 74, 74],
+  sub:        [153, 153, 153],
+  fine:       [187, 187, 187],
+  panel:      [247, 248, 243],
+  hairline:   [222, 227, 220],
+  white:      [255, 255, 255]
+};
+
+/* =========================================================
+   DATA
+   ========================================================= */
+const SHARED_CHECKS = [
+  'Unit sited level and stable on prepared base',
+  'All timber inspected — no splits, warping or damage in transit',
+  'Cladding and banding secure, no movement',
+  'Doors and windows open, close and seal correctly',
+  'All fixings tight, no exposed sharp edges',
+  'Site left clean, all packaging and offcuts removed'
+];
+
+const WALKTHROUGH_CHECKS = [
+  'Controls demonstrated and customer operated them once',
+  'Safe use explained — heat, water, electrics as applicable',
+  'Routine maintenance and cleaning explained',
+  'Winter care and shutdown explained',
+  'Warranty document handed over',
+  'Care and maintenance guide handed over',
+  'Customer knows who to ring if something goes wrong'
+];
+
+const PRODUCTS = {
+  'barrel-sauna': {
+    name: 'Barrel Sauna',
+    checks: [
+      'Heater mounted, guarded and tested to temperature',
+      'Stones loaded and correctly spaced',
+      'Thermometer and hygrometer fitted and reading',
+      'Benches secure, no flex under load',
+      'Backrests and headrests fitted',
+      'Vents open and close freely — inlet and outlet',
+      'Roof shingles or covering watertight',
+      'Electrical connection tested by a qualified person',
+      'Bucket, ladle and accessories handed over'
+    ]
+  },
+  'cube-sauna': {
+    name: 'Cube Sauna',
+    checks: [
+      'Heater mounted, guarded and tested to temperature',
+      'Stones loaded and correctly spaced',
+      'Thermometer and hygrometer fitted and reading',
+      'Benches secure, no flex under load',
+      'Glass front and door seals checked',
+      'Vents open and close freely — inlet and outlet',
+      'Roof watertight, no standing water',
+      'Electrical connection tested by a qualified person',
+      'Bucket, ladle and accessories handed over'
+    ]
+  },
+  'hot-tub': {
+    name: 'Hot Tub',
+    checks: [
+      'Tub filled and held for a full pressure test — no leaks',
+      'Stove or heater fired and brought to temperature',
+      'Flue fitted, sealed and drawing correctly',
+      'Heat shield or guard fitted around the stove',
+      'Drain valve operates and seals',
+      'Liner seated correctly, no creasing or pinching',
+      'Steps and grab handles secure',
+      'Lid fits and latches',
+      'Thermometer fitted and reading'
+    ]
+  },
+  'ice-bath': {
+    name: 'Ice Bath',
+    checks: [
+      'Bath filled and held — no leaks at seams or fittings',
+      'Chiller unit run for a full cycle and reaching target temperature',
+      'Filtration running, no airlocks',
+      'Drain valve operates and seals',
+      'Insulation and lid fitted correctly',
+      'Electrical connection tested by a qualified person',
+      'Thermometer or digital readout fitted and correct'
+    ]
+  },
+  'sauna-hot-tub-combo': {
+    name: 'Sauna + Hot Tub Combination',
+    checks: [
+      'Sauna heater mounted, guarded and tested to temperature',
+      'Sauna stones loaded and correctly spaced',
+      'Sauna benches and vents checked',
+      'Tub filled and held for a full pressure test — no leaks',
+      'Tub stove fired, flue fitted and drawing correctly',
+      'Heat shield fitted around the tub stove',
+      'Both drain points operate and seal',
+      'Electrical connection tested by a qualified person',
+      'Accessories for both units handed over'
+    ]
+  },
+  'mobile-trailer': {
+    name: 'Mobile Sauna Trailer',
+    checks: [
+      'Chassis and axle inspected, no damage',
+      'Road lights tested — indicators, brake, tail, number plate',
+      'Tyre pressures and tread checked',
+      'Wheel nuts torqued',
+      'Coupling, breakaway cable and jockey wheel checked',
+      'Stabiliser legs deploy and hold',
+      'Load restrained, nothing loose inside for transit',
+      'Heater mounted, guarded and tested to temperature',
+      'Flue secure and sealed for travel',
+      'Number plate fitted and matching',
+      'Towing weight confirmed and given to the customer'
+    ]
+  },
+  'shepherds-hut': {
+    name: "Shepherd's Hut",
+    checks: [
+      'Wheels and chassis inspected, hut sitting level',
+      'Roof watertight, no standing water, flashing sealed',
+      'Windows and stable door operate and seal',
+      'Internal fit-out secure — units, shelving, bed base',
+      'Stove installed, flue sealed, heat shields fitted',
+      'Carbon monoxide alarm fitted and tested',
+      'Smoke alarm fitted and tested',
+      'Electrics tested by a qualified person, RCD tripping correctly',
+      'Plumbing filled, run and checked for leaks',
+      'Insulation and vapour barrier signed off before close-up'
+    ]
+  },
+  'changing-room': {
+    name: 'Changing Room',
+    checks: [
+      'Unit sited level, door swings clear',
+      'Benches and hooks secure',
+      'Roof watertight',
+      'Lighting fitted and tested',
+      'Ventilation clear',
+      'Flooring laid and sealed'
+    ]
+  },
+  'outdoor-shower': {
+    name: 'Outdoor Shower',
+    checks: [
+      'Plumbing connected, run and checked for leaks',
+      'Hot and cold both flowing and mixing correctly',
+      'Drainage running away cleanly, no pooling',
+      'Fixings secure, no movement in the frame',
+      'Timber treated and sealed at all cut ends',
+      'Isolation valve fitted and shown to the customer'
+    ]
+  },
+  'other': {
+    name: 'Other / Bespoke',
+    checks: [
+      'Build matches the agreed specification',
+      'All bespoke elements checked against the drawing',
+      'Any powered or plumbed elements tested by a qualified person'
+    ]
+  }
+};
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const state = { checks: {}, walkthrough: {}, snags: [] };
+const pads = {};
+let logoData = null;
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function setStatus(msg, kind) {
+  const el = $('status');
+  el.className = 'status' + (kind ? ' status--' + kind : '');
+  el.querySelector('p').textContent = msg;
+}
+
+function ukDate(iso) {
+  if (!iso) return '';
+  const p = iso.split('-');
+  return p[2] + '/' + p[1] + '/' + p[0];
+}
+
+/* =========================================================
+   LOGO — preload as base64 for the PDF
+   ========================================================= */
+function loadLogo() {
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = img.width;
+    c.height = img.height;
+    c.getContext('2d').drawImage(img, 0, 0);
+    try { logoData = c.toDataURL('image/png'); } catch (e) { logoData = null; }
+  };
+  img.onerror = () => { logoData = null; };
+  img.src = LOGO_URL;
+}
+
+/* =========================================================
+   PRODUCT DROPDOWN
+   ========================================================= */
+function buildProductList() {
+  const sel = $('f-product');
+  Object.keys(PRODUCTS).forEach(key => {
+    const o = document.createElement('option');
+    o.value = key;
+    o.textContent = PRODUCTS[key].name;
+    sel.appendChild(o);
+  });
+}
+
+/* =========================================================
+   CHECK ROWS
+   ========================================================= */
+function renderToggle(scope, id, current) {
+  const opts = [
+    { v: 'pass', l: 'Pass', c: 'on-pass' },
+    { v: 'fail', l: 'Fail', c: 'on-fail' },
+    { v: 'na',   l: 'N/A',  c: 'on-na'   }
+  ];
+  return '<div class="toggle">' + opts.map(o =>
+    `<button type="button" data-scope="${scope}" data-id="${id}" data-v="${o.v}" class="${current === o.v ? o.c : ''}">${o.l}</button>`
+  ).join('') + '</div>';
+}
+
+function renderChecks() {
+  const key = $('f-product').value;
+  const box = $('checks');
+
+  if (!key) {
+    box.innerHTML = '<p class="empty">Select a product above to load the build checks.</p>';
+    state.checks = {};
+    return;
+  }
+
+  const list = PRODUCTS[key].checks.concat(SHARED_CHECKS);
+  const fresh = {};
+  list.forEach(t => { fresh[t] = state.checks[t] || ''; });
+  state.checks = fresh;
+
+  box.innerHTML = list.map(t =>
+    `<div class="checkrow"><p class="checkrow__text">${esc(t)}</p>${renderToggle('checks', esc(t), state.checks[t])}</div>`
+  ).join('');
+}
+
+function renderWalkthrough() {
+  const box = $('walkthrough');
+  WALKTHROUGH_CHECKS.forEach(t => { if (!(t in state.walkthrough)) state.walkthrough[t] = ''; });
+  box.innerHTML = WALKTHROUGH_CHECKS.map(t =>
+    `<div class="checkrow"><p class="checkrow__text">${esc(t)}</p>${renderToggle('walkthrough', esc(t), state.walkthrough[t])}</div>`
+  ).join('');
+}
+
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-scope]');
+  if (!b) return;
+  const scope = b.dataset.scope;
+  const v = b.dataset.v;
+  const key = Object.keys(state[scope]).find(k => esc(k) === b.dataset.id);
+  if (!key) return;
+  state[scope][key] = state[scope][key] === v ? '' : v;
+  scope === 'checks' ? renderChecks() : renderWalkthrough();
+});
+
+/* =========================================================
+   SNAGS
+   ========================================================= */
+function renderSnags() {
+  $('snags').innerHTML = state.snags.map((s, i) =>
+    `<div class="snag"><input class="input" type="text" data-snag="${i}" value="${esc(s)}" placeholder="Describe the snag and who is fixing it"><button class="snag__kill" type="button" data-kill="${i}">×</button></div>`
+  ).join('');
+}
+
+$('add-snag').addEventListener('click', () => {
+  state.snags.push('');
+  renderSnags();
+  const inputs = document.querySelectorAll('input[data-snag]');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+});
+
+document.addEventListener('input', (e) => {
+  if (e.target.matches('input[data-snag]')) state.snags[+e.target.dataset.snag] = e.target.value;
+});
+
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-kill]');
+  if (!b) return;
+  state.snags.splice(+b.dataset.kill, 1);
+  renderSnags();
+});
+
+/* =========================================================
+   SIGNATURE PADS
+   ========================================================= */
+function initPad(id) {
+  const canvas = $(id);
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let dirty = false;
+
+  function size() {
+    const r = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const img = dirty ? canvas.toDataURL() : null;
+    canvas.width = r.width * dpr;
+    canvas.height = r.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#2B5336';
+    if (img) {
+      const i = new Image();
+      i.onload = () => ctx.drawImage(i, 0, 0, r.width, r.height);
+      i.src = img;
+    }
+  }
+
+  function pt(e) {
+    const r = canvas.getBoundingClientRect();
+    const s = e.touches ? e.touches[0] : e;
+    return { x: s.clientX - r.left, y: s.clientY - r.top };
+  }
+
+  function start(e) { e.preventDefault(); drawing = true; dirty = true; const p = pt(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+  function move(e)  { if (!drawing) return; e.preventDefault(); const p = pt(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+  function stop()   { drawing = false; }
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', stop);
+  canvas.addEventListener('touchstart', start, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+  canvas.addEventListener('touchend', stop);
+  window.addEventListener('resize', size);
+  size();
+
+  return {
+    clear() { ctx.clearRect(0, 0, canvas.width, canvas.height); dirty = false; },
+    isSigned() { return dirty; },
+    data() {
+      if (!dirty) return '';
+      const out = document.createElement('canvas');
+      out.width = canvas.width;
+      out.height = canvas.height;
+      const octx = out.getContext('2d');
+      octx.fillStyle = '#ffffff';
+      octx.fillRect(0, 0, out.width, out.height);
+      octx.drawImage(canvas, 0, 0);
+      return out.toDataURL('image/png');
+    },
+    ratio() { const r = canvas.getBoundingClientRect(); return r.height / r.width; }
+  };
+}
+
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-clear]');
+  if (b) pads[b.dataset.clear].clear();
+});
+
+/* =========================================================
+   PRE-FILL FROM URL
+   ========================================================= */
+function prefill() {
+  const p = new URLSearchParams(window.location.search);
+  const map = {
+    name: 'f-name', order: 'f-order', email: 'f-email', phone: 'f-phone',
+    address: 'f-address', product: 'f-product', builder: 'f-builder', serial: 'f-serial'
+  };
+  Object.keys(map).forEach(k => {
+    const v = p.get(k);
+    if (v) $(map[k]).value = v;
+  });
+  $('f-date').value = new Date().toISOString().slice(0, 10);
+  renderChecks();
+}
+
+/* =========================================================
+   VALIDATE + PAYLOAD
+   ========================================================= */
+function validate() {
+  const missing = [];
+  if (!$('f-name').value.trim())    missing.push('customer name');
+  if (!$('f-product').value)        missing.push('product');
+  if (!$('f-builder').value.trim()) missing.push('builder name');
+
+  const a = Object.keys(state.checks).filter(k => !state.checks[k]).length;
+  if (a) missing.push(a + ' build check' + (a > 1 ? 's' : ''));
+
+  const b = Object.keys(state.walkthrough).filter(k => !state.walkthrough[k]).length;
+  if (b) missing.push(b + ' walkthrough item' + (b > 1 ? 's' : ''));
+
+  if (!pads['sig-builder'].isSigned())  missing.push('builder signature');
+  if (!pads['sig-customer'].isSigned()) missing.push('customer signature');
+
+  return missing;
+}
+
+function collect() {
+  const snags = state.snags.map(s => s.trim()).filter(Boolean);
+  const fails = Object.keys(state.checks).filter(k => state.checks[k] === 'fail');
+  const key = $('f-product').value;
+
+  return {
+    name: $('f-name').value.trim(),
+    email: $('f-email').value.trim(),
+    phone: $('f-phone').value.trim(),
+    order: $('f-order').value.trim(),
+    product: key ? PRODUCTS[key].name : '',
+    productKey: key,
+    address: $('f-address').value.trim(),
+    serial: $('f-serial').value.trim(),
+    date: $('f-date').value,
+    builder: $('f-builder').value.trim(),
+    notes: $('f-notes').value.trim(),
+    snags: snags,
+    fails: fails,
+    status: (snags.length || fails.length) ? 'Snagged' : 'Clean'
+  };
+}
+
+function filename(d) {
+  const surname = (d.name.trim().split(/\s+/).pop() || 'Customer').replace(/[^A-Za-z-]/g, '');
+  const order = d.order ? '-' + d.order.replace(/[^A-Za-z0-9-]/g, '') : '';
+  return 'BSUK-Handover' + order + '-' + surname + '-' + (d.date || 'undated') + '.pdf';
+}
+
+/* =========================================================
+   PDF
+   ========================================================= */
+const PG = { w: 210, h: 297, m: 18 };
+const CW = PG.w - (PG.m * 2);
+
+function makePDF(d) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  let y = 0;
+
+  /* ---- page furniture ---- */
+  function footer() {
+    doc.setFillColor(...C.forest);
+    doc.rect(0, PG.h - 14, PG.w, 14, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Barrel Sauna UK   •   Handcrafted in Wales   •   barrelsaunauk.co.uk', PG.w / 2, PG.h - 5.5, { align: 'center' });
+  }
+
+  function page() {
+    doc.addPage();
+    footer();
+    y = PG.m;
+  }
+
+  function room(need) {
+    if (y + need > PG.h - 22) page();
+  }
+
+  /* ---- primitives ---- */
+  function sectionLabel(txt) {
+    room(14);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(...C.sageMuted);
+    doc.text(txt.toUpperCase(), PG.m, y, { charSpace: 0.6 });
+    y += 2.5;
+    doc.setDrawColor(...C.hairline);
+    doc.setLineWidth(0.2);
+    doc.line(PG.m, y, PG.m + CW, y);
+    y += 6;
+  }
+
+  function rowPair(l1, v1, l2, v2) {
+    room(11);
+    const half = CW / 2;
+    doc.setFontSize(7.5);
+    doc.setTextColor(...C.sageMuted);
+    doc.text(l1.toUpperCase(), PG.m, y, { charSpace: 0.5 });
+    if (l2) doc.text(l2.toUpperCase(), PG.m + half, y, { charSpace: 0.5 });
+    y += 4;
+    doc.setFontSize(10);
+    doc.setTextColor(...C.body);
+    doc.text(v1 || '—', PG.m, y, { maxWidth: half - 6 });
+    if (l2) doc.text(v2 || '—', PG.m + half, y, { maxWidth: half - 6 });
+    y += 7;
+  }
+
+  function rowFull(l, v) {
+    const lines = doc.splitTextToSize(v || '—', CW);
+    room(8 + lines.length * 5);
+    doc.setFontSize(7.5);
+    doc.setTextColor(...C.sageMuted);
+    doc.text(l.toUpperCase(), PG.m, y, { charSpace: 0.5 });
+    y += 4;
+    doc.setFontSize(10);
+    doc.setTextColor(...C.body);
+    doc.text(lines, PG.m, y);
+    y += lines.length * 5 + 2;
+  }
+
+  function checkLine(txt, verdict) {
+    const lines = doc.splitTextToSize(txt, CW - 26);
+    const h = Math.max(lines.length * 4.6, 6);
+    room(h + 3);
+
+    const badge = { pass: 'PASS', fail: 'FAIL', na: 'N/A' }[verdict] || '—';
+    const tone = verdict === 'pass' ? C.sage : verdict === 'fail' ? C.terracotta : C.fine;
+
+    doc.setFontSize(9.5);
+    doc.setTextColor(...C.body);
+    doc.text(lines, PG.m, y + 3.4);
+
+    doc.setFontSize(7.5);
+    doc.setTextColor(...tone);
+    doc.text(badge, PG.m + CW, y + 3.4, { align: 'right', charSpace: 0.4 });
+
+    y += h + 1.5;
+    doc.setDrawColor(240, 242, 238);
+    doc.setLineWidth(0.15);
+    doc.line(PG.m, y, PG.m + CW, y);
+    y += 3;
+  }
+
+  /* ================= PAGE 1 — band ================= */
+  doc.setFillColor(...C.forest);
+  doc.rect(0, 0, PG.w, 58, 'F');
+
+  if (logoData) {
+    try { doc.addImage(logoData, 'PNG', PG.m, 12, 34, 23); } catch (e) {}
+  } else {
+    doc.setFontSize(13);
+    doc.setTextColor(255, 255, 255);
+    doc.text('BARREL SAUNA UK', PG.m, 24, { charSpace: 1.2 });
+  }
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...C.sagePale);
+  doc.text('HANDOVER SIGN-OFF', PG.m, 44, { charSpace: 1.6 });
+
+  doc.setFontSize(19);
+  doc.setTextColor(255, 255, 255);
+  doc.text('Build Completion Record', PG.m, 52);
+
+  footer();
+  y = 58 + 14;
+
+  /* ================= THE JOB ================= */
+  sectionLabel('The Job');
+  rowPair('Customer', d.name, 'Order number', d.order);
+  rowPair('Product', d.product, 'Handover date', ukDate(d.date));
+  rowPair('Builder on site', d.builder, 'Serial / batch', d.serial);
+  rowPair('Email', d.email, 'Phone', d.phone);
+  rowFull('Install address', d.address);
+  y += 3;
+
+  /* ================= OUTCOME PANEL — the one focal ================= */
+  room(26);
+  doc.setFillColor(...C.panel);
+  doc.rect(PG.m, y, CW, 20, 'F');
+  doc.setFillColor(...C.terracotta);
+  doc.rect(PG.m, y, 1.1, 20, 'F');
+
+  doc.setFontSize(7.5);
+  doc.setTextColor(...C.sageMuted);
+  doc.text('HANDOVER OUTCOME', PG.m + 6, y + 7, { charSpace: 0.5 });
+
+  doc.setFontSize(12.5);
+  doc.setTextColor(...C.terracotta);
+  const outcome = d.status === 'Clean'
+    ? 'Clean handover — nothing outstanding'
+    : d.snags.length + ' item' + (d.snags.length === 1 ? '' : 's') + ' outstanding';
+  doc.text(outcome, PG.m + 6, y + 14.5);
+  y += 28;
+
+  /* ================= BUILD CHECKS ================= */
+  sectionLabel('Build Checks');
+  Object.keys(state.checks).forEach(k => checkLine(k, state.checks[k]));
+  y += 4;
+
+  /* ================= SNAGS ================= */
+  sectionLabel('Snag List');
+  if (d.snags.length) {
+    d.snags.forEach((s, i) => {
+      const lines = doc.splitTextToSize(s, CW - 8);
+      room(lines.length * 5 + 4);
+      doc.setFontSize(9.5);
+      doc.setTextColor(...C.terracotta);
+      doc.text(String(i + 1) + '.', PG.m, y + 3.4);
+      doc.setTextColor(...C.body);
+      doc.text(lines, PG.m + 7, y + 3.4);
+      y += lines.length * 5 + 3;
+    });
+  } else {
+    room(8);
+    doc.setFontSize(9.5);
+    doc.setTextColor(...C.sub);
+    doc.text('No snags recorded. Clean handover.', PG.m, y + 3.4);
+    y += 8;
+  }
+  y += 4;
+
+  /* ================= WALKTHROUGH ================= */
+  sectionLabel('Customer Walkthrough');
+  Object.keys(state.walkthrough).forEach(k => checkLine(k, state.walkthrough[k]));
+  y += 4;
+
+  /* ================= NOTES ================= */
+  if (d.notes) {
+    sectionLabel('Notes');
+    const lines = doc.splitTextToSize(d.notes, CW);
+    room(lines.length * 5 + 4);
+    doc.setFontSize(9.5);
+    doc.setTextColor(...C.body);
+    doc.text(lines, PG.m, y + 3.4);
+    y += lines.length * 5 + 8;
+  }
+
+  /* ================= SIGN-OFF ================= */
+  const sigBlock = 78;
+  if (y + sigBlock > PG.h - 22) page();
+
+  sectionLabel('Sign-Off');
+
+  const dec = doc.splitTextToSize(
+    'Both parties confirm the unit has been delivered, checked and handed over in the condition recorded on this form, with any snags listed above.',
+    CW
+  );
+  doc.setFontSize(9.5);
+  doc.setTextColor(...C.body);
+  doc.text(dec, PG.m, y);
+  y += dec.length * 5 + 8;
+
+  const half = (CW - 10) / 2;
+  const sigH = 26;
+
+  function sigSlot(x, label, sub, pad) {
+    doc.setFontSize(7.5);
+    doc.setTextColor(...C.sageMuted);
+    doc.text(label.toUpperCase(), x, y, { charSpace: 0.5 });
+
+    const top = y + 3;
+    if (pad.isSigned()) {
+      try { doc.addImage(pad.data(), 'PNG', x, top, half, sigH); } catch (e) {}
+    }
+
+    doc.setDrawColor(...C.hairline);
+    doc.setLineWidth(0.3);
+    doc.line(x, top + sigH + 1, x + half, top + sigH + 1);
+
+    doc.setFontSize(8);
+    doc.setTextColor(...C.sub);
+    doc.text(sub, x, top + sigH + 6);
+  }
+
+  sigSlot(PG.m, 'Builder signature', d.builder || 'Barrel Sauna UK', pads['sig-builder']);
+  sigSlot(PG.m + half + 10, 'Customer signature', d.name || 'Customer', pads['sig-customer']);
+  y += sigH + 16;
+
+  doc.setFontSize(8);
+  doc.setTextColor(...C.fine);
+  doc.text('Signed ' + ukDate(d.date) + '   •   Reference ' + (d.order || 'not given'), PG.m, y);
+
+  /* ---- page numbers ---- */
+  const total = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= total; i++) {
+    doc.setPage(i);
+    doc.setFontSize(7.5);
+    doc.setTextColor(...C.fine);
+    doc.text(i + ' of ' + total, PG.w - PG.m, PG.h - 18, { align: 'right' });
+  }
+
+  return doc;
+}
+
+/* =========================================================
+   DOWNLOAD PDF
+   ========================================================= */
+$('btn-pdf').addEventListener('click', () => {
+  const missing = validate();
+  if (missing.length) {
+    setStatus('Still needed — ' + missing.join(', ') + '.', 'bad');
+    return;
+  }
+  try {
+    const d = collect();
+    makePDF(d).save(filename(d));
+    setStatus('PDF downloaded. WhatsApp it to the customer and attach it to their GHL contact.', 'ok');
+  } catch (err) {
+    setStatus('Could not build the PDF. Try again, or reload the page.', 'bad');
+  }
+});
+
+/* =========================================================
+   SAVE TO GHL
+   ========================================================= */
+$('btn-save').addEventListener('click', async () => {
+  const missing = validate();
+  if (missing.length) {
+    setStatus('Still needed — ' + missing.join(', ') + '.', 'bad');
+    return;
+  }
+  if (WEBHOOK_URL.indexOf('PASTE_') === 0) {
+    setStatus('No webhook set yet. Download the PDF and attach it by hand for now.', 'bad');
+    return;
+  }
+
+  const d = collect();
+  const btn = $('btn-save');
+  btn.disabled = true;
+  setStatus('Sending to GHL…', 'wait');
+
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'handover_complete',
+        first_name: d.name.split(' ')[0] || '',
+        full_name: d.name,
+        email: d.email,
+        phone: d.phone,
+        order_number: d.order,
+        product: d.product,
+        install_address: d.address,
+        serial_reference: d.serial,
+        handover_date: d.date,
+        handover_builder: d.builder,
+        handover_status: d.status,
+        handover_snags: d.snags.length ? d.snags.join(' | ') : 'None',
+        handover_snag_count: d.snags.length,
+        handover_failed_checks: d.fails.length ? d.fails.join(' | ') : 'None',
+        handover_notes: d.notes,
+        handover_pdf_filename: filename(d),
+        submitted_at: new Date().toISOString()
+      })
+    });
+    setStatus('Sent to GHL. Now download the PDF and attach it to the contact.', 'ok');
+    btn.textContent = 'Sent';
+  } catch (err) {
+    btn.disabled = false;
+    setStatus('Could not send. Download the PDF and attach it by hand.', 'bad');
+  }
+});
+
+/* =========================================================
+   RESET
+   ========================================================= */
+$('btn-reset').addEventListener('click', () => {
+  if (confirm('Clear the whole form and start again?')) window.location.href = window.location.pathname;
+});
+
+/* =========================================================
+   BOOT
+   ========================================================= */
+loadLogo();
+buildProductList();
+renderWalkthrough();
+renderSnags();
+pads['sig-builder'] = initPad('sig-builder');
+pads['sig-customer'] = initPad('sig-customer');
+$('f-product').addEventListener('change', renderChecks);
+prefill();
+</script>
+
+</body>
+</html>
